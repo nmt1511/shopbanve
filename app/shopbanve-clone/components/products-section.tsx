@@ -27,7 +27,7 @@ export default function ProductsSection({ options }: { options?: HomepageOptions
   const [featured, setFeatured] = useState<Drawing[]>(fallbackFeatured)
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    Promise.all([ShopBanVeRepository.getCategories(), ShopBanVeRepository.getFeaturedDrawings(3)])
+    Promise.all([ShopBanVeRepository.getCategories(), ShopBanVeRepository.getFeaturedDrawings(6)])
       .then(([categoryItems, drawings]) => { setCategories(categoryItems.filter((item) => item.status === "active")); setFeatured(drawings) })
       .catch(() => undefined)
       .finally(() => setLoading(false))
