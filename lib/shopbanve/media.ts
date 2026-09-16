@@ -1,6 +1,7 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/lib/firebase"
 import type { DrawingImage } from "./types"
+import { ShopBanVeRepository } from "./repository"
 
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024
 
@@ -31,6 +32,17 @@ export async function uploadDrawingImage(file: File, userId?: string): Promise<D
   if (dimensions.width < 320 || dimensions.height < 240) throw new Error(`Ảnh ${file.name} có kích thước quá nhỏ.`)
 
   const id = `image-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  const settings = await ShopBanVeRepository.getContactSettings()
+  if (settings?.cloudinaryCloudName && settings.cloudinaryUploadPreset) {
+    const body = new FormData()
+    body.append("file", file)
+    body.append("upload_preset", settings.cloudinaryUploadPreset)
+    body.append("folder", "shopbanve/drawings")
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${settings.cloudinaryCloudName}/image/upload`, { method: "POST", body })
+    if (!response.ok) throw new Error("Không thể tải ảnh lên Cloudinary.")
+    const result = await response.json() as { secure_url: string; public_id: string; format?: string; bytes?: number; width?: number; height?: number }
+    return { id, url: result.secure_url, publicId: result.public_id, alt: file.name.replace(/\.[^.]+$/, "").trim() || "Ảnh dự án", width: result.width || dimensions.width, height: result.height || dimensions.height, bytes: result.bytes || file.size, format: result.format || file.type.split("/")[1] || "image", sortOrder: 0 }
+  }
   const path = `shopbanve/drawings/${userId || "admin"}/${id}-${safeFileName(file.name)}`
   const uploaded = await uploadBytes(ref(storage, path), file, {
     contentType: file.type,

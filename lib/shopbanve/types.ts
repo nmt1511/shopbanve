@@ -138,6 +138,8 @@ export interface ShopContactSettings {
   telegramBotEnabled?: boolean
   telegramBotToken?: string
   telegramChatId?: string
+  cloudinaryCloudName?: string
+  cloudinaryUploadPreset?: string
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string

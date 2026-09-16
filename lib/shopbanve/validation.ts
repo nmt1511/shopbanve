@@ -143,6 +143,8 @@ export const shopContactSettingsSchema = z.object({
   telegramBotEnabled: z.boolean().optional(),
   telegramBotToken: z.string().max(240).optional(),
   telegramChatId: z.string().max(120).optional(),
+  cloudinaryCloudName: z.string().max(120).optional(),
+  cloudinaryUploadPreset: z.string().max(120).optional(),
   seoTitle: z.string().trim().max(180).optional(),
   seoDescription: z.string().trim().max(320).optional(),
   seoKeywords: z.string().trim().max(320).optional(),
