@@ -17,12 +17,12 @@ const fallbackSlides = [
 type HeroSlide = { title: string; image: string; link: string }
 
 const channelStyles = {
-  zalo: { icon: MessageCircle, className: "hover:border-sky-300 hover:bg-sky-50" },
-  telegram: { icon: Send, className: "hover:border-sky-300 hover:bg-sky-50" },
-  instagram: { icon: Instagram, className: "hover:border-pink-300 hover:bg-pink-50" },
-  facebook: { icon: Facebook, className: "hover:border-blue-300 hover:bg-blue-50" },
-  email: { icon: Mail, className: "hover:border-emerald-300 hover:bg-emerald-50" },
-  phone: { icon: Phone, className: "hover:border-orange-300 hover:bg-orange-50" },
+  zalo: { icon: MessageCircle, className: "border-sky-200 bg-sky-50 text-sky-700 hover:border-sky-400 hover:bg-sky-100" },
+  telegram: { icon: Send, className: "border-blue-200 bg-blue-50 text-blue-700 hover:border-blue-400 hover:bg-blue-100" },
+  instagram: { icon: Instagram, className: "border-pink-200 bg-gradient-to-r from-pink-50 via-rose-50 to-orange-50 text-pink-700 hover:border-pink-400" },
+  facebook: { icon: Facebook, className: "border-indigo-200 bg-indigo-50 text-indigo-700 hover:border-indigo-400 hover:bg-indigo-100" },
+  email: { icon: Mail, className: "border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-400 hover:bg-emerald-100" },
+  phone: { icon: Phone, className: "border-orange-200 bg-orange-50 text-orange-700 hover:border-orange-400 hover:bg-orange-100" },
 } as const
 
 function mapSlider(slider: Slider): HeroSlide {
