@@ -28,7 +28,6 @@ const sidebarItems = [
   { href: "/admin/shop-categories", icon: FolderOpen, label: "Danh mục tài liệu" },
   { href: "/admin/articles", icon: Newspaper, label: "Bài viết & kiến thức" },
   { href: "/admin/purchase-inquiries", icon: MessageSquare, label: "Yêu cầu tư vấn" },
-  { href: "/admin/shop-settings", icon: Settings, label: "Trang chủ & liên hệ" },
   { href: "/admin/tags", icon: Tag, label: "Thẻ bài viết" },
   { href: "/admin/sliders", icon: ImageIcon, label: "Hero & Banner" },
   { href: "/admin/logs", icon: Activity, label: "Nhật ký hoạt động" },
