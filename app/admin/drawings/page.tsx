@@ -7,10 +7,8 @@ import { ShopBanVeRepository } from "@/lib/shopbanve/repository"
 import type { Drawing, ShopCategory } from "@/lib/shopbanve/types"
 import { useAuth } from "@/lib/firebase-auth"
 
-function priceLabel(drawing: Drawing) {
-  if (drawing.priceType === "free") return "Miễn phí"
-  if (drawing.priceType === "contact") return "Liên hệ"
-  return `${drawing.price.toLocaleString("vi-VN")}đ`
+function priceLabel(_drawing: Drawing) {
+  return "Liên hệ báo giá"
 }
 
 export default function AdminDrawingsPage() {

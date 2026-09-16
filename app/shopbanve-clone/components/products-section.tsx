@@ -16,10 +16,8 @@ const fallbackFeatured: Drawing[] = []
 function coverImage(drawing: Drawing) {
   return drawing.images.find((image) => image.id === drawing.coverImageId)?.url || drawing.images[0]?.url || "/placeholder.svg"
 }
-function priceLabel(drawing: Drawing) {
-  if (drawing.priceType === "free") return "Miễn phí"
-  if (drawing.priceType === "contact") return "Liên hệ"
-  return `${drawing.price.toLocaleString("vi-VN")}đ`
+function priceLabel(_drawing: Drawing) {
+  return "Liên hệ báo giá"
 }
 
 export default function ProductsSection({ options }: { options?: HomepageOptions }) {

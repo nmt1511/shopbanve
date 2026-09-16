@@ -12,10 +12,8 @@ function coverImage(drawing: Drawing) {
   return cover?.url || "/placeholder.svg"
 }
 
-function priceLabel(drawing: Drawing) {
-  if (drawing.priceType === "free") return "Miễn phí"
-  if (drawing.priceType === "contact") return "Liên hệ"
-  return `${drawing.price.toLocaleString("vi-VN")}đ`
+function priceLabel(_drawing: Drawing) {
+  return "Liên hệ báo giá"
 }
 
 export function PageIntro({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {

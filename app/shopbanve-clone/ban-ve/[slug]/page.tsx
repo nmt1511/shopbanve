@@ -9,10 +9,8 @@ import PurchaseOptions from "./purchase-options"
 import { ShopBanVeRepository } from "@/lib/shopbanve/repository"
 import type { Drawing } from "@/lib/shopbanve/types"
 
-function formatPrice(drawing: Drawing) {
-  if (drawing.priceType === "free") return "Miễn phí"
-  if (drawing.priceType === "contact") return "Liên hệ báo giá"
-  return `${drawing.price.toLocaleString("vi-VN")}đ`
+function formatPrice(_drawing: Drawing) {
+  return "Liên hệ báo giá"
 }
 
 export default function DrawingDetailPage() {

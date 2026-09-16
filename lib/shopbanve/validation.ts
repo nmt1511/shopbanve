@@ -140,6 +140,9 @@ export const shopContactSettingsSchema = z.object({
   footerSupportTitle: z.string().trim().max(100).optional(),
   footerSupportText: z.string().trim().max(320).optional(),
   footerSupportButtonLabel: z.string().trim().max(80).optional(),
+  seoTitle: z.string().trim().max(180).optional(),
+  seoDescription: z.string().trim().max(320).optional(),
+  seoKeywords: z.string().trim().max(320).optional(),
   updatedAt: z.string().datetime(),
 })
 
