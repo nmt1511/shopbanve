@@ -78,6 +78,7 @@ export default function PurchaseOptions({ drawing }: { drawing: Drawing }) {
     setSaving(true)
     try {
       const id = await ShopBanVeRepository.addPurchaseInquiry({ ...form, drawingId: drawing.id, drawingTitle: drawing.title, source: "form", status: "new" })
+      void fetch("/api/shop-inquiries/telegram", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ...form, id, drawingTitle: drawing.title }) }).catch(() => undefined)
       setSubmitted(`Mã yêu cầu: ${id}`)
       setForm({ ...initialForm })
     } catch (reason) {

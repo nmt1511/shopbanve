@@ -14,7 +14,7 @@ export default function ContactBubble() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-sm font-black text-[#172554]">Cần tìm tài liệu?</p>
-              <p className="mt-1 text-xs leading-5 text-slate-500">Gửi tên đề tài hoặc lĩnh vực, mình sẽ hỗ trợ tìm nhanh hơn.</p>
+              
             </div>
             <button type="button" aria-label="Đóng liên hệ" onClick={() => setOpen(false)} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
               <X className="h-4 w-4" />
@@ -27,7 +27,7 @@ export default function ContactBubble() {
       )}
       <button type="button" aria-expanded={open} aria-label={open ? "Đóng hộp liên hệ" : "Mở hộp liên hệ"} onClick={() => setOpen((value) => !value)} className="group flex min-h-14 items-center gap-3 rounded-full bg-[#f97316] px-4 text-white shadow-xl shadow-orange-500/30 transition hover:-translate-y-1 hover:bg-orange-600">
         <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/20"><span className="absolute inset-0 animate-ping rounded-full bg-white/20" /><MessageCircle className="relative h-5 w-5" /></span>
-        <span className="hidden text-sm font-bold sm:block">Cần hỗ trợ tìm tài liệu?</span>
+        <span className="hidden text-sm font-bold sm:block">Liên hệ ngay</span>
       </button>
     </div>
   )
