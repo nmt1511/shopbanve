@@ -1,10 +1,7 @@
-// Cloudinary configuration and upload utilities
-export const CLOUDINARY_CONFIG = {
-  cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dtjqb6x85",
-  apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!,
-  apiSecret: process.env.CLOUDINARY_API_SECRET!,
-}
+import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage"
+import { storage } from "@/lib/firebase"
 
+/** Uploads images to the configured Firebase Storage bucket. */
 export interface CloudinaryUploadResponse {
   public_id: string
   secure_url: string
@@ -16,102 +13,58 @@ export interface CloudinaryUploadResponse {
   created_at: string
 }
 
-function generateSignature(params: Record<string, string | number>, apiSecret: string): string {
-  // Sort parameters alphabetically
-  const sortedParams = Object.keys(params)
-    .sort()
-    .map((key) => `${key}=${params[key]}`)
-    .join("&")
-
-  // Create signature string
-  const signatureString = `${sortedParams}${apiSecret}`
-
-  // Generate SHA-1 hash (using Web Crypto API)
-  return btoa(signatureString)
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .substring(0, 40)
+function safeName(name: string) {
+  return (
+    name
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/[^a-zA-Z0-9._-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "image"
+  )
 }
 
-async function sha1(message: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(message)
-  const hashBuffer = await crypto.subtle.digest("SHA-1", data)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
-}
-
-export class CloudinaryUploader {
-  private static readonly UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`
-
-  static async uploadImage(file: File, folder = "products"): Promise<CloudinaryUploadResponse> {
-    const timestamp = Math.round(Date.now() / 1000)
-
-    // Parameters for signature generation
-    const params = {
-      folder,
-      timestamp,
+export class StorageImageUploader {
+  static async uploadImage(file: File, folder = "uploads"): Promise<CloudinaryUploadResponse> {
+    if (!file.type.startsWith("image/")) {
+      throw new Error("Vui lòng chọn file hình ảnh.")
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("Kích thước ảnh không được vượt quá 10MB.")
     }
 
-    // Generate signature
-    const paramsString = Object.keys(params)
-      .sort()
-      .map((key) => `${key}=${params[key as keyof typeof params]}`)
-      .join("&")
-
-    const signatureString = `${paramsString}${CLOUDINARY_CONFIG.apiSecret}`
-    const signature = await sha1(signatureString)
-
-    const formData = new FormData()
-    formData.append("file", file)
-    formData.append("folder", folder)
-    formData.append("timestamp", timestamp.toString())
-    formData.append("api_key", CLOUDINARY_CONFIG.apiKey)
-    formData.append("signature", signature)
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+    const path = `uploads/${safeName(folder)}/${id}-${safeName(file.name)}`
 
     try {
-      const response = await fetch(this.UPLOAD_URL, {
-        method: "POST",
-        body: formData,
+      const uploaded = await uploadBytes(storageRef(storage, path), file, {
+        contentType: file.type,
+        customMetadata: { originalName: file.name },
       })
+      const url = await getDownloadURL(uploaded.ref)
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error?.message || "Upload failed")
+      return {
+        public_id: path,
+        secure_url: url,
+        url,
+        format: file.type.split("/")[1] || "image",
+        width: 0,
+        height: 0,
+        bytes: file.size,
+        created_at: new Date().toISOString(),
       }
-
-      const data: CloudinaryUploadResponse = await response.json()
-      return data
-    } catch (error) {
-      console.error("Cloudinary upload error:", error)
-      throw new Error("Không thể tải ảnh lên. Vui lòng thử lại.")
+    } catch (reason) {
+      throw new Error(reason instanceof Error ? reason.message : "Không thể tải ảnh lên.")
     }
   }
 
   static async deleteImage(publicId: string): Promise<void> {
-    // Note: Deletion requires server-side implementation with API secret
-    // For now, we'll just log the deletion request
-    console.log("Delete image request for:", publicId)
+    console.warn("Storage deletion requires an explicit server-side cleanup flow:", publicId)
   }
 
-  static getOptimizedUrl(
-    publicId: string,
-    options: {
-      width?: number
-      height?: number
-      quality?: "auto" | number
-      format?: "auto" | "webp" | "jpg" | "png"
-    } = {},
-  ): string {
-    const { width, height, quality = "auto", format = "auto" } = options
-
-    const transformations = []
-    if (width) transformations.push(`w_${width}`)
-    if (height) transformations.push(`h_${height}`)
-    if (quality) transformations.push(`q_${quality}`)
-    if (format) transformations.push(`f_${format}`)
-
-    const transformString = transformations.length > 0 ? `${transformations.join(",")}/` : ""
-
-    return `https://res.cloudinary.com/${CLOUDINARY_CONFIG.cloudName}/image/upload/${transformString}${publicId}`
+  static getOptimizedUrl(publicId: string): string {
+    return publicId
   }
 }
+
+export const CloudinaryUploader = StorageImageUploader

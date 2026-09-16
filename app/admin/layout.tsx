@@ -16,22 +16,21 @@ import {
   Menu,
   X,
   LogOut,
-  Bot,
   Tag,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { AuthProvider, useAuth } from "@/lib/firebase-auth"
+import { useAuth } from "@/lib/firebase-auth"
 import AdminAuthGuard from "@/components/admin-auth-guard"
 
 const sidebarItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard", exact: true },
-  { href: "/admin/products", icon: Package, label: "Quản lý sản phẩm" },
-  { href: "/admin/categories", icon: FolderOpen, label: "Danh mục sản phẩm" },
-  { href: "/admin/news", icon: Newspaper, label: "Tin tức & Dự án" },
+  { href: "/admin/drawings", icon: Package, label: "Tài liệu Shop" },
+  { href: "/admin/shop-categories", icon: FolderOpen, label: "Danh mục sản phẩm tài liệu" },
+  { href: "/admin/articles", icon: Newspaper, label: "Bài viết & kiến thức" },
+  { href: "/admin/purchase-inquiries", icon: MessageSquare, label: "Yêu cầu tư vấn" },
+  { href: "/admin/shop-settings", icon: Settings, label: "Cấu hình thư viện" },
   { href: "/admin/tags", icon: Tag, label: "Thẻ bài viết" },
-  { href: "/admin/sliders", icon: ImageIcon, label: "Slider & Banner" },
-  { href: "/admin/contacts", icon: MessageSquare, label: "Liên hệ & Tin nhắn" },
-  { href: "/admin/chat-prompts", icon: Bot, label: "Quản lý AI Chat" },
+  { href: "/admin/sliders", icon: ImageIcon, label: "Hero & Banner" },
   { href: "/admin/logs", icon: Activity, label: "Nhật ký hoạt động" },
   { href: "/admin/settings", icon: Settings, label: "Cài đặt" },
 ]
@@ -57,10 +56,11 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
 
   return (
     <AdminAuthGuard>
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex h-dvh min-h-0 overflow-hidden bg-gray-50">
+        {sidebarOpen && <button aria-label="Đóng menu" className="fixed inset-0 z-40 bg-slate-950/35 lg:hidden" onClick={() => setSidebarOpen(false)} />}
         {/* Sidebar */}
         <aside
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static ${
+          className={`fixed inset-y-0 left-0 z-50 flex h-dvh w-[min(18rem,88vw)] flex-col overflow-hidden bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:translate-x-0 lg:static lg:h-dvh lg:w-64 ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -71,7 +71,7 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
             </Button>
           </div>
 
-          <nav className="mt-6 px-3 pb-20">
+          <nav className="mt-6 flex-1 overflow-y-auto px-3 pb-20">
             {sidebarItems.map((item) => {
               const Icon = item.icon
               return (
@@ -105,9 +105,9 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
         </aside>
 
         {/* Main content */}
-        <div className="flex flex-col flex-1">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           {/* Top bar */}
-          <header className="flex items-center justify-between h-16 px-6 bg-white border-b shadow-sm">
+          <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white px-4 shadow-sm sm:px-6">
             <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(true)}>
               <Menu className="h-5 w-5" />
             </Button>
@@ -120,7 +120,7 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
           </header>
 
           {/* Page content */}
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>
+          <main className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain p-3 sm:p-6">{children}</main>
         </div>
       </div>
     </AdminAuthGuard>
@@ -128,9 +128,5 @@ function AdminLayoutContent({ children }: { children: ReactNode }) {
 }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  return (
-    <AuthProvider>
-      <AdminLayoutContent>{children}</AdminLayoutContent>
-    </AuthProvider>
-  )
+  return <AdminLayoutContent>{children}</AdminLayoutContent>
 }

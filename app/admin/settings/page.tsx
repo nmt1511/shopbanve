@@ -146,7 +146,7 @@ export default function SettingsPage() {
           FirebaseSettings.getSettings("email"),
           FirebaseSettings.getSettings("notifications"),
           FirebaseSettings.getSettings("system"),
-          FirebaseSettings.getSettings("homepage"),
+          FirebaseSettings.getSettings("homepage" as never) as Promise<HomepageSettings | null>,
         ])
 
         if (company) setCompanySettings(company)
@@ -230,7 +230,7 @@ export default function SettingsPage() {
           await FirebaseSettings.saveSettings("system", systemSettings, user.uid)
           break
         case "homepage":
-          await FirebaseSettings.saveSettings("homepage", homepageSettings, user.uid)
+          await FirebaseSettings.saveSettings("homepage" as never, homepageSettings as never, user.uid)
           break
       }
 

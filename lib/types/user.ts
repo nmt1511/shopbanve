@@ -5,6 +5,8 @@ export interface User {
   email: string // Required, unique - Email for login (indexed)
   avatar_url?: string // Optional - Profile picture URL
   status: "active" | "inactive" // Required - Account status, default 'active'
+  role?: string // Optional - Firebase profile role used by the admin guard
+  permissions?: string[] // Optional - Firebase profile permissions used by the admin guard
   last_login_at?: string // Optional - Last login timestamp (ISO string)
   created_at: string // Required - Account creation timestamp
   updated_at: string // Required - Last update timestamp

@@ -382,7 +382,7 @@ export default function CategoriesPage() {
                         <Switch
                           checked={category.status === "active"}
                           onCheckedChange={() => toggleStatus(category.id!, category.status)}
-                          size="sm"
+                         
                         />
                         <Badge
                           className={

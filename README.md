@@ -1,221 +1,173 @@
-# 🏭 Inox Phương Thuận Phát - Company Website
+# Shop Bản Vẽ
 
-Website công ty chuyên về inox và kim loại, được xây dựng với Next.js 14, TypeScript, và Firebase.
+Nền tảng tài liệu kỹ thuật và bản vẽ số, xây dựng với Next.js 14, TypeScript và Firebase. Shop Bản Vẽ hiện là website chính tại `/`. Các route Phương Thuận Phát cũ và namespace Firebase legacy vẫn được giữ lại trong giai đoạn chuyển đổi để có thể rollback.
 
-## 🚀 Tính năng chính
+## Trạng thái chức năng
 
-### 📱 Website công cộng
-- **Trang chủ**: Giới thiệu công ty và sản phẩm
-- **Sản phẩm**: Catalog đầy đủ các sản phẩm inox
-- **Tin tức**: Tin tức công ty và ngành
-- **Giới thiệu**: Thông tin về công ty
-- **Liên hệ**: Form liên hệ và thông tin
-- **Đăng ký đại lý**: Form đăng ký làm đại lý
+- Public catalog, tìm kiếm, lọc danh mục, bài viết và chi tiết bản vẽ đọc dữ liệu Shop Bản Vẽ từ Firebase Realtime Database.
+- Admin có CRUD cho bản vẽ, gallery nhiều ảnh/cover, danh mục, bài viết, yêu cầu mua và cấu hình liên hệ/Zalo.
+- Người dùng có thể liên hệ trực tiếp qua Zalo hoặc gửi form yêu cầu mua/tư vấn.
+- Hệ thống không giả lập thanh toán thành công và không cấp quyền tải file giả.
+- `app/shopbanve-clone` hiện là implementation dùng chung cho các route public Shop Bản Vẽ; route `/shopbanve-clone` vẫn được giữ để xem compatibility page.
+- Build, type-check, lint, browser smoke test và Firebase rules test chưa được coi là đạt nếu chưa có output thực tế.
 
-### 🔧 Admin Dashboard
-- **Quản lý sản phẩm**: CRUD sản phẩm với hình ảnh
-- **Quản lý tin tức**: Đăng bài, chỉnh sửa tin tức
-- **Quản lý danh mục**: Phân loại sản phẩm
-- **Quản lý người dùng**: User management
-- **Quản lý liên hệ**: Xem và xử lý form liên hệ
-- **Quản lý slider**: Banner trang chủ
-- **Cài đặt**: Cấu hình website
-- **Activity logs**: Theo dõi hoạt động
+## Công nghệ
 
-### 🤖 AI Features
-- **Chat AI**: Hỗ trợ khách hàng tự động với Gemini AI
-- **Chat prompts**: Quản lý các prompt cho AI
-- **AI agents**: Cấu hình AI agents
+- **Framework:** Next.js 14 App Router
+- **Ngôn ngữ:** TypeScript strict mode
+- **UI:** React, Tailwind CSS v4, Radix/shadcn-style primitives, Lucide
+- **Backend:** Firebase Authentication, Realtime Database và Storage
+- **Validation:** Zod
+- **Charts:** Recharts
 
-## 🛠️ Tech Stack
+## Chạy local
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui
-- **Backend**: Firebase (Auth + Realtime Database + Storage)
-- **AI**: Google Gemini AI
-- **Image Upload**: Cloudinary
-- **State Management**: React Context + SWR
-- **Form**: React Hook Form + Zod validation
-- **UI Components**: Radix UI + shadcn/ui
+Yêu cầu Node.js 18 trở lên.
 
-## 🔐 Cấu hình Bảo mật
-
-### 1. Thiết lập biến môi trường
-
-Sao chép file template:
 ```bash
-cp .env.example .env.local
+npm install
+npm run dev
 ```
 
-### 2. Cấu hình Firebase
+Mở [http://localhost:3000](http://localhost:3000).
 
-Thêm vào `.env.local`:
+## Biến môi trường Firebase
+
+Sao chép `.env.example` thành `.env.local` và điền API key/App ID của Firebase Web App:
+
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://your_project-default-rtdb.region.firebasedatabase.app
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123:web:abc123
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=shopduan-2bf1b.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=https://shopduan-2bf1b-default-rtdb.asia-southeast1.firebasedatabase.app
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=shopduan-2bf1b
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=shopduan-2bf1b.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=639462115066
+NEXT_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
+NEXT_PUBLIC_ADMIN_EMAILS=
 ```
 
-### 3. Cấu hình Cloudinary
+Không commit `.env.local` hoặc bất kỳ file môi trường chứa giá trị thật. Firebase Web API key là cấu hình client, nhưng vẫn phải được quản lý qua biến môi trường và Firebase Rules.
 
-```env
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
-NEXT_PUBLIC_CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
+## Route chính
+
+### Public Shop Bản Vẽ
+
+- `/`
+- `/danh-muc`
+- `/do-an`
+- `/tim-kiem`
+- `/bai-viet`
+- `/bai-viet/[slug]`
+- `/ban-ve/[slug]`
+- `/dang-nhap`
+- `/dang-ky`
+- `/lien-he`
+- `/gio-hang`
+- `/huong-dan`
+- `/ve-chung-toi`
+- `/chinh-sach-bao-mat`
+
+### Admin Shop Bản Vẽ
+
+- `/admin/login`
+- `/admin`
+- `/admin/drawings`
+- `/admin/drawings/new`
+- `/admin/drawings/[id]/edit`
+- `/admin/shop-categories`
+- `/admin/articles`
+- `/admin/articles/new`
+- `/admin/articles/[id]/edit`
+- `/admin/purchase-inquiries`
+- `/admin/shop-settings`
+
+### Legacy compatibility
+
+Các route và node legacy được giữ lại để rollback hoặc vận hành song song:
+
+- Public: `/san-pham`, `/tin-tuc`, `/gioi-thieu`, `/lien-he`, `/dang-ky-dai-ly`
+- Admin: nhóm products, categories, news, contacts, agents, users, tags, sliders, settings và logs
+- Firebase nodes: `products`, `posts`, `categories`, `contacts`, `users`, `agent_registrations`, `tags`, `sliders`
+
+Không xóa các node legacy nếu chưa có backup/export và quyết định chuyển đổi rõ ràng.
+
+## Firebase data model Shop Bản Vẽ
+
+- `drawings`
+- `shop_categories`
+- `shop_articles`
+- `shop_settings/contact`
+- `purchase_inquiries`
+- `activity_logs`
+
+Bản vẽ có thể có nhiều ảnh trong `Drawing.images`, gồm URL, alt text, metadata, thứ tự và `coverImageId`. Bản vẽ `published` phải có ít nhất một ảnh. Ảnh upload được lưu trong Firebase Storage dưới namespace:
+
+```text
+shopbanve/drawings/{userId}/{id}-{fileName}
 ```
 
-### 4. Cấu hình Gemini AI
+Xóa record không đồng nghĩa với xóa file vật lý trong Storage. Việc cleanup asset cũ cần server-side cleanup hoặc metadata `cleanup-pending`; không được giả định file đã bị xóa.
 
-```env
-GEMINI_API_KEY=your_gemini_api_key
-```
+## Admin authorization
 
-### ⚠️ Quy tắc bảo mật
+Admin có thể được cấp quyền bằng một trong các cơ chế sau:
 
-- ✅ **NEXT_PUBLIC_**: Client-side, an toàn để expose
-- ❌ **Không NEXT_PUBLIC_**: Server-side only, KHÔNG BAO GIỜ expose
-- 🔐 **API secrets**: Luôn giữ private, không commit vào Git
-- 🚫 **Không hard-code**: Tuyệt đối không hard-code credentials trong code
+- Firebase custom claims (`admin`, `role: admin` hoặc `isAdmin`)
+- Profile `users/{uid}` với `role: admin`
+- Profile `users/{uid}` có `permissions` chứa `admin`
+- Allowlist tạm thời trong `NEXT_PUBLIC_ADMIN_EMAILS`
 
-## 📦 Cài đặt & Chạy
+Firebase Rules vẫn là lớp bảo vệ cuối cùng. UI guard không thay thế Rules.
 
-### Yêu cầu hệ thống
-- Node.js 18+ 
-- pnpm (khuyên dùng)
+## Purchase flow
 
-### Cài đặt
+Trang chi tiết bản vẽ cung cấp hai lựa chọn:
+
+1. Liên hệ trực tiếp qua Zalo, dùng URL hoặc số Zalo được cấu hình trong `/admin/shop-settings`.
+2. Gửi form yêu cầu với họ tên, email, số điện thoại, công ty, mục đích, lời nhắn và consent.
+
+Form ghi vào `purchase_inquiries` và admin có thể chuyển trạng thái `new`, `processing`, `contacted`, `closed` hoặc `spam`. Không có trạng thái thanh toán thành công hoặc entitlement tải file giả.
+
+## Bảo mật
+
+- Không hardcode Firebase credentials vào source.
+- Không commit `.env.local`.
+- Không expose `CLOUDINARY_API_SECRET` hoặc bất kỳ secret server-side nào vào client bundle.
+- Upload mới dùng Firebase Storage; module `lib/cloudinary.ts` chỉ giữ compatibility cho một số màn hình legacy và không đọc secret client-side.
+- Xác thực và phân quyền phải được kiểm tra lại bằng Firebase Rules trong môi trường thật.
+- Không xóa dữ liệu Firebase legacy trước khi có backup/export và kế hoạch rollback.
+- Không force-push, tạo remote mới hoặc xóa `.git` trong phạm vi migration này nếu chưa có chỉ dẫn và URL repository rõ ràng.
+
+## Kiểm tra trước khi bàn giao
+
+Chạy các lệnh sau khi môi trường cho phép:
+
 ```bash
-# Clone dự án
-git clone https://github.com/nmt1511/inox-PhuongThuanPhat-companysite.git
-cd inox-PhuongThuanPhat-companysite
-
-# Cài dependencies
-pnpm install
-
-# Thiết lập environment
-cp .env.example .env.local
-# Điền thông tin thực vào .env.local
-
-# Chạy development
-pnpm dev
+npx tsc --noEmit --pretty false
+npm run lint
+npm run build
 ```
 
-Mở [http://localhost:3000](http://localhost:3000) để xem website.
+Hiện chưa có output thành công được xác nhận cho các lệnh trên. `next.config.mjs` hiện vẫn có `ignoreDuringBuilds` và `ignoreBuildErrors` cho compatibility, vì vậy phải chạy `npx tsc --noEmit` riêng và ghi nhận kết quả thực tế.
 
-### Build production
-```bash
-pnpm build
-pnpm start
-```
+### Checklist vận hành
 
-## 🏗️ Cấu trúc dự án
+- [ ] Cấu hình đủ biến Firebase trong `.env.local`.
+- [ ] Kiểm tra Firebase Realtime Database Rules: public published read và admin write.
+- [ ] Kiểm tra Firebase Storage Rules: upload đúng namespace và chỉ admin được ghi/xóa theo policy.
+- [ ] Kiểm tra custom claims/profile/allowlist với tài khoản admin thật.
+- [ ] Test drawing CRUD, gallery nhiều ảnh, cover, reorder và draft không ảnh.
+- [ ] Test article/category/inquiry/settings CRUD.
+- [ ] Test Zalo URL, Zalo phone, bật/tắt Zalo và bật/tắt inquiry form.
+- [ ] Test public routes ở 320px, 375px, 768px và desktop.
+- [ ] Test keyboard focus, dialog close, label, alt text và Vietnamese glyphs.
+- [ ] Test cleanup asset sau khi thay/xóa ảnh; không giả định Storage tự xóa.
+- [ ] Giữ nguyên `.git` và Firebase legacy nodes cho tới khi migration/rollback được xác nhận.
 
-```
-├── app/                    # Next.js 14 App Router
-│   ├── (routes)/          # Route groups
-│   ├── admin/            # Admin dashboard pages
-│   ├── chat/             # AI Chat page
-│   ├── san-pham/         # Products page
-│   ├── tin-tuc/          # News page
-│   └── ...
-├── components/            # React components
-│   ├── ui/               # shadcn/ui base components
-│   └── shared/           # Custom shared components
-├── lib/                   # Utilities & services
-│   ├── firebase.ts       # Firebase configuration
-│   ├── cloudinary.ts     # Image upload service
-│   ├── gemini-ai.ts      # AI service
-│   └── ...
-├── hooks/                 # Custom React hooks
-├── data/                  # Static data & types
-├── styles/                # Global styles
-└── public/                # Static assets
-```
+## Rollback safety
 
-## 🔑 Admin Access
-
-Truy cập admin tại: `/admin/login`
-
-Đăng nhập bằng tài khoản Firebase được cấp quyền admin.
-
-## 📱 Responsive Design
-
-- ✅ Mobile-first approach
-- ✅ Tablet friendly
-- ✅ Desktop optimized
-- ✅ Dark mode support
-
-## 🧪 Code Quality
-
-### Linting
-```bash
-pnpm lint
-```
-
-### Type Checking  
-```bash
-pnpm build  # TypeScript sẽ được check tự động
-```
-
-### Best Practices
-- ✅ TypeScript strict mode
-- ✅ ESLint + Prettier
-- ✅ Functional components với React.FC
-- ✅ Proper error handling
-- ✅ Input validation với Zod
-- ✅ API service layer pattern
-
-## 🚀 Deploy
-
-### Vercel (Khuyên dùng)
-```bash
-# Tự động deploy khi push lên main branch
-git push origin main
-```
-
-### Manual Deploy
-```bash
-pnpm build
-# Upload folder .next và các file cần thiết lên server
-```
-
-### Environment Variables trên Production
-Đảm bảo set đúng các env vars trên Vercel/hosting platform:
-- Tất cả các NEXT_PUBLIC_* variables
-- Server-side secrets (GEMINI_API_KEY, CLOUDINARY_API_SECRET)
-
-## 🤝 Contributing
-
-1. Fork dự án
-2. Tạo feature branch (`git checkout -b feature/amazing-feature`)  
-3. Commit thay đổi (`git commit -m 'feat: add amazing feature'`)
-4. Push lên branch (`git push origin feature/amazing-feature`)
-5. Tạo Pull Request
-
-### Commit Convention
-- `feat: tính năng mới`
-- `fix: sửa lỗi`
-- `docs: cập nhật tài liệu`
-- `style: format code`
-- `refactor: tái cấu trúc`
-- `test: thêm test`
-
-## 📞 Liên hệ
-
-- **Company**: Inox Phương Thuận Phát
-- **Developer**: [nmt1511](https://github.com/nmt1511)
-- **Repository**: [inox-PhuongThuanPhat-companysite](https://github.com/nmt1511/inox-PhuongThuanPhat-companysite)
-
-## 📄 License
-
-Bản quyền thuộc về Công ty Inox Phương Thuận Phát.
-
----
-
-⚡ **Lưu ý quan trọng**: Đảm bảo cấu hình đúng `.env.local` trước khi chạy dự án. Không bao giờ commit file chứa API keys thực!
+- Không xóa `.git` trong giai đoạn này.
+- Không khởi tạo remote mới hoặc push nếu chưa có repository URL và ủy quyền rõ ràng.
+- Không xóa Firebase legacy nodes.
+- Giữ các route legacy cho tới khi public/admin Shop Bản Vẽ, Rules, upload và dữ liệu đã được smoke-test thực tế.

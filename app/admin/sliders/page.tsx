@@ -278,7 +278,7 @@ export default function SlidersPage() {
                     <Button
                       type="button"
                       variant="destructive"
-                      size="sm"
+                     
                       className="absolute top-2 right-2"
                       onClick={() => handleInputChange("image", "")}
                       disabled={isUploadingImage}
@@ -546,7 +546,7 @@ export default function SlidersPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <Switch checked={slider.isActive} onCheckedChange={() => toggleStatus(slider)} size="sm" />
+                        <Switch checked={slider.isActive} onCheckedChange={() => toggleStatus(slider)} />
                         <Badge
                           className={slider.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}
                         >
@@ -557,15 +557,15 @@ export default function SlidersPage() {
                     <TableCell>{new Date(slider.createdAt).toLocaleDateString("vi-VN")}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-1">
-                        <Button variant="ghost" size="sm" onClick={() => handlePreview(slider)} className="h-8 px-2">
+                        <Button variant="ghost" onClick={() => handlePreview(slider)} className="h-8 px-2">
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleEdit(slider)} className="h-8 px-2">
+                        <Button variant="ghost" onClick={() => handleEdit(slider)} className="h-8 px-2">
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="ghost"
-                          size="sm"
+                         
                           onClick={() => handleDelete(slider.id!)}
                           className="h-8 px-2 text-red-600 hover:text-red-700"
                         >

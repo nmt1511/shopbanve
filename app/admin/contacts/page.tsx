@@ -193,7 +193,7 @@ export default function ContactsPage() {
     }
   }
 
-  const handleStatusUpdate = async (contactId: string, newStatus: string) => {
+  const handleStatusUpdate = async (contactId: string, newStatus: Contact["status"]) => {
     try {
       await FirebaseDB.updateContactStatus(contactId, newStatus, user?.uid || "admin")
       toast({

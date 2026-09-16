@@ -54,9 +54,10 @@ export default function ContactDetailPage() {
   const [isUpdating, setIsUpdating] = useState(false)
 
   useEffect(() => {
+    const id = params.id as string
     const loadContact = async () => {
       try {
-        const contactData = await FirebaseDB.getContact(params.id as string)
+        const contactData = await FirebaseDB.getContact(id)
         if (contactData) {
           setContact(contactData)
         } else {
@@ -85,7 +86,7 @@ export default function ContactDetailPage() {
     }
   }, [params.id, router])
 
-  const handleStatusChange = async (newStatus: string) => {
+  const handleStatusChange = async (newStatus: Contact["status"]) => {
     if (!contact) return
 
     setIsUpdating(true)
@@ -108,7 +109,7 @@ export default function ContactDetailPage() {
     }
   }
 
-  const handlePriorityChange = async (newPriority: string) => {
+  const handlePriorityChange = async (newPriority: Contact["priority"]) => {
     if (!contact) return
 
     setIsUpdating(true)

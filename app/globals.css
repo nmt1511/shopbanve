@@ -75,8 +75,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  --font-sans: "Segoe UI", "Noto Sans", Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -127,9 +127,18 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Segoe UI", "Noto Sans", Arial, Helvetica, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Segoe UI", "Noto Sans", Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: normal;
   }
 }
 
@@ -197,6 +206,19 @@
 }
 
 @layer utilities {
+  .font-black {
+    font-family: "Segoe UI", "Noto Sans", Arial, Helvetica, sans-serif;
+    font-weight: 700;
+  }
+
+  h1.font-black {
+    font-weight: 700;
+  }
+
+  h2.font-black {
+    font-weight: 700;
+  }
+
   @media (min-width: 768px) {
     .parallax-bg {
       background-attachment: fixed;

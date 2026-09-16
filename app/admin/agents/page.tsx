@@ -27,12 +27,14 @@ import {
   MapPin,
 } from "lucide-react"
 import { FirebaseDB, type Agent } from "@/lib/firebase-db"
+import { useAuth } from "@/lib/firebase-auth"
 
 const statusOptions = ["Tất cả", "Chờ duyệt", "Đã duyệt", "Từ chối"]
 const levelOptions = ["Tất cả", "Bronze", "Silver", "Gold", "Platinum"]
 const businessTypeOptions = ["Tất cả", "Bán lẻ", "Bán buôn", "Gia công", "Khác"]
 
 export default function AgentsPage() {
+  const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("Tất cả")
   const [selectedLevel, setSelectedLevel] = useState("Tất cả")
@@ -107,7 +109,8 @@ export default function AgentsPage() {
 
     try {
       const newStatus = selectedAgent.action === "approve" ? "approved" : "rejected"
-      await FirebaseDB.updateAgentStatus(selectedAgent.id, newStatus, "admin-user-id")
+      const actorId = user?.uid || "admin"
+      await FirebaseDB.updateAgentStatus(selectedAgent.id, newStatus, actorId)
 
       // Log the review action
       await FirebaseDB.logActivity(
@@ -115,7 +118,7 @@ export default function AgentsPage() {
         "User",
         selectedAgent.action === "approve" ? "Success" : "Warning",
         `${selectedAgent.action === "approve" ? "Duyệt" : "Từ chối"} đơn đăng ký đại lý: ${selectedAgent.email} - ${reviewNote}`,
-        "admin-user-id",
+        actorId,
       )
 
       setIsReviewDialogOpen(false)

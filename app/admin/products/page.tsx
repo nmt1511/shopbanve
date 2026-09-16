@@ -247,7 +247,7 @@ export default function ProductsPage() {
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <img
-                        src={product.image || "/placeholder.svg"}
+                        src={product.image_url || "/placeholder.svg"}
                         alt={product.name}
                         className="h-12 w-12 rounded-lg object-cover"
                       />
@@ -280,7 +280,7 @@ export default function ProductsPage() {
                       <Badge variant="secondary">Không hoạt động</Badge>
                     )}
                   </TableCell>
-                  <TableCell>{new Date(product.createdAt).toLocaleDateString("vi-VN")}</TableCell>
+                  <TableCell>{new Date(product.created_at).toLocaleDateString("vi-VN")}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-1">
                       <Button variant="ghost" size="sm" asChild className="h-8 px-2">

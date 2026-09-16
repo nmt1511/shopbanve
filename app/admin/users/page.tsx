@@ -31,9 +31,11 @@ import { FirebaseDB, type User, type CreateUserData, type UpdateUserData, type U
 import { useAuth } from "@/lib/firebase-auth"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "@/lib/firebase"
+import { useToast } from "@/hooks/use-toast"
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth()
+  const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStatus, setSelectedStatus] = useState("Tất cả")
   const [users, setUsers] = useState<User[]>([])
@@ -128,7 +130,7 @@ export default function UsersPage() {
       setFormData({ name: "", email: "", password: "", avatar_url: "", status: "active" })
     } catch (error) {
       console.error("Failed to save user:", error)
-      alert("Có lỗi xảy ra khi lưu thông tin người dùng")
+      toast({ title: "L?i", description: "Thao t�c kh�ng th�nh c�ng.", variant: "destructive" })
     } finally {
       setLoading(false)
     }
@@ -155,7 +157,7 @@ export default function UsersPage() {
       await FirebaseDB.deleteUser(user.id, currentUser?.uid)
     } catch (error) {
       console.error("Failed to delete user:", error)
-      alert("Có lỗi xảy ra khi xóa người dùng")
+      toast({ title: "L?i", description: "Thao t�c kh�ng th�nh c�ng.", variant: "destructive" })
     }
   }
 
@@ -165,7 +167,7 @@ export default function UsersPage() {
       await FirebaseDB.updateUser(user.id, { status: newStatus }, currentUser?.uid)
     } catch (error) {
       console.error("Failed to update user status:", error)
-      alert("Có lỗi xảy ra khi cập nhật trạng thái người dùng")
+      toast({ title: "L?i", description: "Thao t�c kh�ng th�nh c�ng.", variant: "destructive" })
     }
   }
 
@@ -424,7 +426,7 @@ export default function UsersPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Switch checked={user.status === "active"} onCheckedChange={() => toggleStatus(user)} size="sm" />
+                      <Switch checked={user.status === "active"} onCheckedChange={() => toggleStatus(user)} />
                       {getStatusBadge(user.status)}
                     </div>
                   </TableCell>

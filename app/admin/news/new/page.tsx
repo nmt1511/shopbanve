@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -26,12 +26,25 @@ export default function NewNewsPage() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [availableTags, setAvailableTags] = useState<{ id: string; name: string }[]>([])
 
-  useState(() => {
+  useEffect(() => {
     const unsubscribe = FirebaseDB.onTagsChange((tags) => {
-      setAvailableTags(tags)
+      setAvailableTags(tags.filter((tag) => Boolean(tag.id)).map((tag) => ({ id: tag.id!, name: tag.name })))
     })
     return unsubscribe
   }, [])
+
+  const [formData, setFormData] = useState({
+    title: "",
+    slug: "",
+    content: "",
+    excerpt: "",
+    featured_image_url: "",
+    author_id: "admin", // Default author, should be dynamic in real app
+    status: "draft" as "published" | "draft" | "scheduled",
+    view_count: 0,
+    published_at: "",
+    tag_ids: [] as string[],
+  })
 
   const handleInputChange = (field: string, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -134,19 +147,6 @@ export default function NewNewsPage() {
       handleInputChange("slug", generateSlug(title))
     }
   }
-
-  const [formData, setFormData] = useState({
-    title: "",
-    slug: "",
-    content: "",
-    excerpt: "",
-    featured_image_url: "",
-    author_id: "admin", // Default author, should be dynamic in real app
-    status: "draft" as "published" | "draft" | "scheduled",
-    view_count: 0,
-    published_at: "",
-    tag_ids: [] as string[],
-  })
 
   return (
     <div className="space-y-6">

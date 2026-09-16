@@ -1,28 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import { JetBrains_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { Suspense } from "react"
+import Providers from "./providers"
 import "./globals.css"
 
-const inter = Inter({
-  subsets: ["latin", "vietnamese"],
-  variable: "--font-inter",
-  display: "swap",
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin", "vietnamese"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-})
-
 export const metadata: Metadata = {
-  title: "Inox Phương Thuận Phát - Chuyên vật tư inox và gia công",
-  description:
-    "Công ty TNHH Phương Thuận Phát chuyên cung cấp vật tư inox và gia công cắt chấn các loại tôn, sắt, inox tại Bình Dương",
-  generator: "v0.app",
+  title: "Shop Bản Vẽ - Kho dự án, đồ án và tài liệu kỹ thuật",
+  description: "Tìm kiếm, tham khảo dự án, đồ án, luận văn và tài liệu kỹ thuật cho học tập và công việc.",
+  generator: "Next.js",
 }
 
 export default function RootLayout({
@@ -31,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="vi" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="vi">
       <body className="font-sans antialiased">
-        <Suspense fallback={null}>{children}</Suspense>
+        <Providers>{children}</Providers>
         <Analytics />
       </body>
     </html>

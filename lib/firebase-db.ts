@@ -137,6 +137,7 @@ export interface ActivityLog {
   created_at: string // TIMESTAMP - Event occurrence time
 }
 
+export type { User, CreateUserData, UpdateUserData, UserStats } from "./types/user"
 import type { User, CreateUserData, UpdateUserData, UserStats } from "./types/user"
 
 // Slider types
@@ -149,20 +150,6 @@ export interface Slider {
   buttonText: string
   order: number
   isActive: boolean
-  createdAt: string
-  updatedAt?: string
-}
-
-// Chat Prompt configuration types
-export interface ChatPromptConfig {
-  id?: string
-  name: string
-  prompt: string
-  isActive: boolean
-  includeProducts: boolean
-  includeNews: boolean
-  includeCategories: boolean
-  includeContacts: boolean
   createdAt: string
   updatedAt?: string
 }
@@ -467,7 +454,7 @@ export class FirebaseDB {
     return null
   }
 
-  static async addContact(contact: Omit<Contact, "id">): Promise<string> {
+  static async addContact(contact: Omit<Contact, "id" | "created_at" | "updated_at">): Promise<string> {
     const contactsRef = ref(database, "contacts")
     const newContactRef = push(contactsRef)
     await set(newContactRef, {
@@ -781,7 +768,7 @@ export class FirebaseDB {
     return null
   }
 
-  static async addTag(tag: Omit<Tag, "id">, userId?: string): Promise<string> {
+  static async addTag(tag: Omit<Tag, "id" | "created_at" | "updated_at">, userId?: string): Promise<string> {
     const tagsRef = ref(database, "tags")
     const newTagRef = push(tagsRef)
     await set(newTagRef, {
@@ -1022,7 +1009,8 @@ export class FirebaseDB {
       const userEntry = Object.entries(data).find(([_, user]: [string, any]) => user.email === email)
       if (userEntry) {
         const [id, userData] = userEntry
-        return { id, ...(userData as User) }
+        const { id: _storedId, ...profile } = userData as User & { id?: string }
+        return { id, ...profile }
       }
     }
     return null
@@ -1127,7 +1115,7 @@ export class FirebaseDB {
     return null
   }
 
-  static async addSlider(slider: Omit<Slider, "id">, userId?: string): Promise<string> {
+  static async addSlider(slider: Omit<Slider, "id" | "createdAt">, userId?: string): Promise<string> {
     const slidersRef = ref(database, "sliders")
     const newSliderRef = push(slidersRef)
     await set(newSliderRef, {
@@ -1173,141 +1161,6 @@ export class FirebaseDB {
   static async getActiveSliders(): Promise<Slider[]> {
     const sliders = await this.getSliders()
     return sliders.filter((slider) => slider.isActive).sort((a, b) => a.order - b.order)
-  }
-
-  // Chat Prompt management functions
-  static async getChatPrompts(): Promise<ChatPromptConfig[]> {
-    const promptsRef = ref(database, "chat_prompts")
-    const snapshot = await get(promptsRef)
-    if (snapshot.exists()) {
-      const data = snapshot.val()
-      return Object.keys(data).map((key) => ({ id: key, ...data[key] }))
-    }
-    return []
-  }
-
-  static async getChatPrompt(id: string): Promise<ChatPromptConfig | null> {
-    const promptRef = ref(database, `chat_prompts/${id}`)
-    const snapshot = await get(promptRef)
-    if (snapshot.exists()) {
-      return { id, ...snapshot.val() }
-    }
-    return null
-  }
-
-  static async getActiveChatPrompt(): Promise<ChatPromptConfig | null> {
-    const prompts = await this.getChatPrompts()
-    return prompts.find((prompt) => prompt.isActive) || null
-  }
-
-  static async addChatPrompt(prompt: Omit<ChatPromptConfig, "id">, userId?: string): Promise<string> {
-    const promptsRef = ref(database, "chat_prompts")
-    const newPromptRef = push(promptsRef)
-    await set(newPromptRef, {
-      ...prompt,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
-
-    if (userId) {
-      await this.logActivity("chat_prompt.create", "System", "Success", `Tạo prompt chat mới: ${prompt.name}`, userId)
-    }
-
-    return newPromptRef.key!
-  }
-
-  static async updateChatPrompt(id: string, updates: Partial<ChatPromptConfig>, userId?: string): Promise<void> {
-    const existingPrompt = await this.getChatPrompt(id)
-    const promptName = existingPrompt?.name || "Không xác định"
-
-    const promptRef = ref(database, `chat_prompts/${id}`)
-    await update(promptRef, {
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    })
-
-    if (userId) {
-      await this.logActivity(
-        "chat_prompt.update",
-        "System",
-        "Information",
-        `Cập nhật prompt chat: ${promptName}`,
-        userId,
-      )
-    }
-  }
-
-  static async deleteChatPrompt(id: string, userId?: string): Promise<void> {
-    const existingPrompt = await this.getChatPrompt(id)
-    const promptName = existingPrompt?.name || "Không xác định"
-
-    const promptRef = ref(database, `chat_prompts/${id}`)
-    await remove(promptRef)
-
-    if (userId) {
-      await this.logActivity("chat_prompt.delete", "System", "Warning", `Xóa prompt chat: ${promptName}`, userId)
-    }
-  }
-
-  static async setActiveChatPrompt(id: string, userId?: string): Promise<void> {
-    // First, deactivate all prompts
-    const prompts = await this.getChatPrompts()
-    for (const prompt of prompts) {
-      if (prompt.id !== id && prompt.isActive) {
-        await this.updateChatPrompt(prompt.id!, { isActive: false }, userId)
-      }
-    }
-
-    // Then activate the selected prompt
-    await this.updateChatPrompt(id, { isActive: true }, userId)
-
-    if (userId) {
-      const prompt = await this.getChatPrompt(id)
-      await this.logActivity(
-        "chat_prompt.activate",
-        "System",
-        "Information",
-        `Kích hoạt prompt chat: ${prompt?.name}`,
-        userId,
-      )
-    }
-  }
-
-  static async buildChatContext(promptConfig: ChatPromptConfig): Promise<string> {
-    let context = ""
-
-    if (promptConfig.includeProducts) {
-      const products = await this.getProducts()
-      context += `\n\nSẢN PHẨM HIỆN CÓ:\n`
-      products.slice(0, 20).forEach((product) => {
-        context += `- ${product.name}: ${product.price.toLocaleString()}đ/${product.unit} (Danh mục: ${product.category})\n`
-      })
-    }
-
-    if (promptConfig.includeNews) {
-      const news = await this.getPublishedNews(10)
-      context += `\n\nTIN TỨC MỚI NHẤT:\n`
-      news.forEach((article) => {
-        context += `- ${article.title} (${new Date(article.published_at || article.created_at).toLocaleDateString("vi-VN")})\n`
-      })
-    }
-
-    if (promptConfig.includeCategories) {
-      const categories = await this.getCategories()
-      context += `\n\nDANH MỤC SẢN PHẨM:\n`
-      categories.forEach((category) => {
-        context += `- ${category.name}: ${category.description || "Không có mô tả"}\n`
-      })
-    }
-
-    if (promptConfig.includeContacts) {
-      context += `\n\nTHÔNG TIN LIÊN HỆ:\n`
-      context += `- Công ty: Inox Việt Nam\n`
-      context += `- Chuyên cung cấp các sản phẩm inox chất lượng cao\n`
-      context += `- Hỗ trợ tư vấn và báo giá miễn phí\n`
-    }
-
-    return context
   }
 
   // Real-time listeners
@@ -1602,7 +1455,7 @@ export class FirebaseDashboard {
     return Array.from(distribution.entries()).map(([name, value], index) => ({
       name,
       value,
-      color: colors[index % colors.length],
+      color: colors[index % colors.length] ?? "#64748B",
     }))
   }
 
