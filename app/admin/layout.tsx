@@ -25,10 +25,10 @@ import AdminAuthGuard from "@/components/admin-auth-guard"
 const sidebarItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard", exact: true },
   { href: "/admin/drawings", icon: Package, label: "Tài liệu Shop" },
-  { href: "/admin/shop-categories", icon: FolderOpen, label: "Danh mục sản phẩm tài liệu" },
+  { href: "/admin/shop-categories", icon: FolderOpen, label: "Danh mục tài liệu" },
   { href: "/admin/articles", icon: Newspaper, label: "Bài viết & kiến thức" },
   { href: "/admin/purchase-inquiries", icon: MessageSquare, label: "Yêu cầu tư vấn" },
-  { href: "/admin/shop-settings", icon: Settings, label: "Cấu hình thư viện" },
+  { href: "/admin/shop-settings", icon: Settings, label: "Trang chủ & liên hệ" },
   { href: "/admin/tags", icon: Tag, label: "Thẻ bài viết" },
   { href: "/admin/sliders", icon: ImageIcon, label: "Hero & Banner" },
   { href: "/admin/logs", icon: Activity, label: "Nhật ký hoạt động" },

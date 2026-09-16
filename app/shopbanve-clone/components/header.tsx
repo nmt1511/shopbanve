@@ -6,11 +6,6 @@ import { ChevronDown, Menu, Search, ShoppingCart, X } from "lucide-react"
 import { ShopBanVeRepository } from "@/lib/shopbanve/repository"
 import type { ShopCategory, ShopMenuItem } from "@/lib/shopbanve/types"
 
-const utilityItems = [
-  { label: "Hướng dẫn", href: "/huong-dan" },
-  { label: "Liên hệ", href: "/lien-he" },
-]
-
 const defaultMenuItems: ShopMenuItem[] = [
   { id: "home", label: "Trang chủ", href: "/", enabled: true, order: 1 },
   { id: "catalog", label: "Danh mục tài liệu", href: "/danh-muc", enabled: true, order: 2 },
@@ -71,7 +66,6 @@ export default function Header() {
           <Link href="/gio-hang" aria-label="Giỏ hàng" className="relative rounded-full p-2.5 text-slate-500 transition hover:bg-slate-100 hover:text-[#f97316]">
             <ShoppingCart className="h-5 w-5" />
           </Link>
-          {utilityItems.map((item) => <Link key={item.href} href={item.href} className="text-xs font-semibold text-slate-500 hover:text-[#f97316]">{item.label}</Link>)}
         </div>
 
         <button
@@ -95,7 +89,6 @@ export default function Header() {
                 {item.id === "catalog" && categories.length > 0 && <div className="ml-3 border-l border-orange-100 pl-3">{categories.map((category) => <Link key={category.id} href={`/danh-muc?category=${category.id}`} onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm text-slate-500 hover:bg-orange-50 hover:text-[#f97316]">{category.name}</Link>)}</div>}
               </div>
             ))}
-            {utilityItems.map((item) => <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[#f97316]">{item.label}</Link>)}
           </nav>
         </div>
       )}
