@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { ChevronDown, Menu, Search, ShoppingCart, X } from "lucide-react"
 import { ShopBanVeRepository } from "@/lib/shopbanve/repository"
-import type { ShopMenuItem } from "@/lib/shopbanve/types"
+import type { ShopCategory, ShopMenuItem } from "@/lib/shopbanve/types"
 
 const utilityItems = [
   { label: "Hướng dẫn", href: "/huong-dan" },
@@ -17,25 +17,28 @@ const defaultMenuItems: ShopMenuItem[] = [
   { id: "projects", label: "Dự án & đồ án", href: "/do-an", enabled: true, order: 3 },
   { id: "knowledge", label: "Kiến thức", href: "/bai-viet", enabled: true, order: 4 },
 ]
+const defaultAnnouncement = "TẢI BẢN VẼ NHANH CHÓNG · FILE CHUẨN KỸ THUẬT · HỖ TRỢ 24/7"
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [menuItems, setMenuItems] = useState(defaultMenuItems)
+  const [categories, setCategories] = useState<ShopCategory[]>([])
+  const [announcement, setAnnouncement] = useState({ enabled: true, text: defaultAnnouncement })
 
   useEffect(() => {
     let active = true
     ShopBanVeRepository.getContactSettings().then((settings) => {
-      if (!active || !settings?.menuItems?.length) return
-      setMenuItems(settings.menuItems.filter((item) => item.enabled).sort((a, b) => a.order - b.order))
+      if (!active || !settings) return
+      if (settings.menuItems?.length) setMenuItems(settings.menuItems.filter((item) => item.enabled).sort((a, b) => a.order - b.order))
+      setAnnouncement({ enabled: settings.announcementEnabled !== false, text: settings.announcementText || defaultAnnouncement })
     }).catch(() => undefined)
+    ShopBanVeRepository.getCategories().then((items) => { if (active) setCategories(items.filter((item) => item.status === "active").sort((a, b) => a.order - b.order)) }).catch(() => undefined)
     return () => { active = false }
   }, [])
 
   return (
     <header className="relative z-50 border-b border-slate-200 bg-white">
-      <div className="bg-[#172554] px-4 py-2 text-center text-xs font-medium tracking-wide text-blue-100">
-        TẢI BẢN VẼ NHANH CHÓNG · FILE CHUẨN KỸ THUẬT · HỖ TRỢ 24/7
-      </div>
+      {announcement.enabled && <div className="bg-[#172554] px-4 py-2 text-center text-xs font-medium tracking-wide text-blue-100">{announcement.text}</div>}
 
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex shrink-0 items-center gap-3" onClick={() => setMenuOpen(false)}>
@@ -49,16 +52,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors hover:text-[#f97316]"
-            >
-              {item.label}
-              {item.id === "catalog" && <ChevronDown className="h-3.5 w-3.5" />}
-            </Link>
-          ))}
+          {menuItems.map((item) => item.id === "catalog" && categories.length > 0 ? <div key={item.label} className="group relative"><Link href={item.href} className="flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors hover:text-[#f97316]">{item.label}<ChevronDown className="h-3.5 w-3.5" /></Link><div className="invisible absolute left-1/2 top-full z-50 mt-3 w-64 -translate-x-1/2 rounded-xl border border-slate-200 bg-white p-2 opacity-0 shadow-xl transition group-hover:visible group-hover:opacity-100">{categories.map((category) => <Link key={category.id} href={`/danh-muc?category=${category.id}`} className="block rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-orange-50 hover:text-[#f97316]">{category.name}</Link>)}</div></div> : <Link key={item.label} href={item.href} className="flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors hover:text-[#f97316]">{item.label}</Link>)}
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -79,6 +73,8 @@ export default function Header() {
           {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
+
+      {categories.length > 0 && <div className="hidden border-t border-slate-100 bg-slate-50 lg:block"><div className="mx-auto flex max-w-7xl flex-wrap gap-2 px-4 py-2 sm:px-6 lg:px-8">{categories.map((category) => <Link key={category.id} href={`/danh-muc?category=${category.id}`} className="rounded-full px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-orange-100 hover:text-[#f97316]">{category.name}</Link>)}</div></div>}
 
       {menuOpen && (
         <div className="border-t border-slate-100 bg-white px-4 py-4 lg:hidden">

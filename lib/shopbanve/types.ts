@@ -129,6 +129,12 @@ export interface ShopContactSettings {
   homepageSections?: HomepageSection[]
   homepageOptions?: HomepageOptions
   updatedAt: string
+  announcementEnabled?: boolean
+  announcementText?: string
+  footerDescription?: string
+  footerSupportTitle?: string
+  footerSupportText?: string
+  footerSupportButtonLabel?: string
 }
 
 export interface ContactChannel {
