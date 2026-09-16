@@ -17,6 +17,8 @@ import {
   X,
   LogOut,
   Tag,
+  Users,
+  WalletCards,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/firebase-auth"
@@ -28,6 +30,8 @@ const sidebarItems = [
   { href: "/admin/shop-categories", icon: FolderOpen, label: "Danh mục tài liệu" },
   { href: "/admin/articles", icon: Newspaper, label: "Bài viết & kiến thức" },
   { href: "/admin/purchase-inquiries", icon: MessageSquare, label: "Yêu cầu tư vấn" },
+  { href: "/admin/users", icon: Users, label: "Người dùng" },
+  { href: "/admin/transactions", icon: WalletCards, label: "Nạp tiền & giao dịch" },
   { href: "/admin/tags", icon: Tag, label: "Thẻ bài viết" },
   { href: "/admin/sliders", icon: ImageIcon, label: "Hero & Banner" },
   { href: "/admin/logs", icon: Activity, label: "Nhật ký hoạt động" },
