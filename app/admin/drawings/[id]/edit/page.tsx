@@ -328,8 +328,8 @@ export default function EditDrawingPage() {
               }
               className="mt-1 h-10 w-full rounded-md border px-3"
             >
-              <option value="contact">Liên hệ</option>
-              <option value="paid">Có phí</option>
+              <option value="contact">Liên hệ tư vấn</option>
+              <option value="paid">Hiện giá</option>
               <option value="free">Miễn phí</option>
             </select>
           </label>

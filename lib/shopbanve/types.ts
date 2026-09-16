@@ -135,6 +135,9 @@ export interface ShopContactSettings {
   footerSupportTitle?: string
   footerSupportText?: string
   footerSupportButtonLabel?: string
+  telegramBotEnabled?: boolean
+  telegramBotToken?: string
+  telegramChatId?: string
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: string
