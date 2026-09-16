@@ -14,7 +14,7 @@ const defaultSections: HomepageSection[] = [
   { id: "library", label: "Thư viện tài liệu", enabled: true, order: 3 },
   { id: "articles", label: "Bài viết & kiến thức", enabled: true, order: 4 },
 ]
-const defaultOptions: HomepageOptions = { showDailyUpdate: true, showCategoryLink: true, showArticleLink: true }
+const defaultOptions: HomepageOptions = { showDailyUpdate: true, showCategoryLink: true, showArticleLink: true, dailyUpdateOrder: 1, categoryLinkOrder: 2, articleLinkOrder: 3 }
 
 export default function HomepageSections() {
   const [sections, setSections] = useState(defaultSections)

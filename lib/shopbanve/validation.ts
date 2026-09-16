@@ -130,6 +130,9 @@ export const shopContactSettingsSchema = z.object({
     showDailyUpdate: z.boolean(),
     showCategoryLink: z.boolean(),
     showArticleLink: z.boolean(),
+    dailyUpdateOrder: z.number().int().nonnegative(),
+    categoryLinkOrder: z.number().int().nonnegative(),
+    articleLinkOrder: z.number().int().nonnegative(),
   }).optional(),
   updatedAt: z.string().datetime(),
 })

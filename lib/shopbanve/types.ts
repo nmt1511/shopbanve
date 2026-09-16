@@ -157,4 +157,7 @@ export interface HomepageOptions {
   showDailyUpdate: boolean
   showCategoryLink: boolean
   showArticleLink: boolean
+  dailyUpdateOrder: number
+  categoryLinkOrder: number
+  articleLinkOrder: number
 }
