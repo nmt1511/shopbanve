@@ -83,20 +83,17 @@ export default function Header() {
         </button>
       </div>
 
-      {categories.length > 0 && <div className="hidden border-t border-slate-100 bg-slate-50 lg:block"><div className="mx-auto flex max-w-7xl flex-wrap gap-2 px-4 py-2 sm:px-6 lg:px-8">{categories.map((category) => <Link key={category.id} href={`/danh-muc?category=${category.id}`} className="rounded-full px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-orange-100 hover:text-[#f97316]">{category.name}</Link>)}</div></div>}
-
       {menuOpen && (
         <div className="border-t border-slate-100 bg-white px-4 py-4 lg:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1">
             {menuItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[#f97316]"
-              >
-                {item.label}
-              </Link>
+              <div key={item.label}>
+                <Link href={item.href} onClick={() => setMenuOpen(false)} className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[#f97316]">
+                  {item.label}
+                  {item.id === "catalog" && categories.length > 0 && <ChevronDown className="h-4 w-4" />}
+                </Link>
+                {item.id === "catalog" && categories.length > 0 && <div className="ml-3 border-l border-orange-100 pl-3">{categories.map((category) => <Link key={category.id} href={`/danh-muc?category=${category.id}`} onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm text-slate-500 hover:bg-orange-50 hover:text-[#f97316]">{category.name}</Link>)}</div>}
+              </div>
             ))}
             {utilityItems.map((item) => <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-[#f97316]">{item.label}</Link>)}
           </nav>
